@@ -2,6 +2,7 @@
     "name": "Purchase Vendor Rating Report",
     "version": "16.0.1.0.0",
     "category": "Purchases",
+    "author": "Abdurrachman Basurroh",
     "summary": "Penilaian vendor berdasarkan pengiriman dan harga pembelian",
     "license": "LGPL-3",
     "images": ["static/description/cover.png"],
