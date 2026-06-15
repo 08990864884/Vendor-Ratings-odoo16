@@ -12,6 +12,8 @@
         "security/vendor_rating_security.xml",
         "views/vendor_rating_report_views.xml",
     ],
+    "price": 10.00,
+    "currency": "USD",
     "installable": True,
     "application": False,
 }
