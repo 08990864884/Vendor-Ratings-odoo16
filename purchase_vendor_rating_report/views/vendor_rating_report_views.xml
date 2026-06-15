@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_vendor_rating_report_tree" model="ir.ui.view">
+        <field name="name">purchase.vendor.rating.report.tree</field>
+        <field name="model">purchase.vendor.rating.report</field>
+        <field name="arch" type="xml">
+            <tree string="Vendor Ratings" create="0" edit="0" delete="0"
+                  decoration-success="grade in ('a_plus', 'a')"
+                  decoration-info="grade in ('b_plus', 'b')"
+                  decoration-warning="grade in ('c_plus', 'c', 'd')"
+                  decoration-danger="grade == 'f'">
+                <field name="grade" widget="badge"/>
+                <field name="score"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="purchase_count"/>
+                <field name="received_count" optional="hide"/>
+                <field name="average_delivery_days"/>
+                <field name="average_delay_days"/>
+                <field name="on_time_rate"/>
+                <field name="last_purchase_price"/>
+                <field name="previous_purchase_price" optional="hide"/>
+                <field name="price_change_percent"/>
+                <field name="last_purchase_date"/>
+                <field name="last_order_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_vendor_rating_report_search" model="ir.ui.view">
+        <field name="name">purchase.vendor.rating.report.search</field>
+        <field name="model">purchase.vendor.rating.report</field>
+        <field name="arch" type="xml">
+            <search string="Vendor Ratings">
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="category_id"/>
+                <field name="grade"/>
+                <filter string="A+ / A" name="top_grade"
+                        domain="[('grade', 'in', ('a_plus', 'a'))]"/>
+                <filter string="Need Attention" name="low_grade"
+                        domain="[('grade', 'in', ('d', 'f'))]"/>
+                <separator/>
+                <filter string="Vendor" name="group_partner"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter string="Product" name="group_product"
+                        context="{'group_by': 'product_id'}"/>
+                <filter string="Grade" name="group_grade"
+                        context="{'group_by': 'grade'}"/>
+                <filter string="Company" name="group_company"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="purchase_vendor_rating_report_pivot" model="ir.ui.view">
+        <field name="name">purchase.vendor.rating.report.pivot</field>
+        <field name="model">purchase.vendor.rating.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Vendor Ratings" disable_linking="True">
+                <field name="partner_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="score" type="measure"/>
+                <field name="average_delivery_days" type="measure"/>
+                <field name="average_delay_days" type="measure"/>
+                <field name="last_purchase_price" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="purchase_vendor_rating_report_graph" model="ir.ui.view">
+        <field name="name">purchase.vendor.rating.report.graph</field>
+        <field name="model">purchase.vendor.rating.report</field>
+        <field name="arch" type="xml">
+            <graph string="Vendor Ratings" type="bar">
+                <field name="partner_id"/>
+                <field name="score" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_purchase_vendor_rating_report" model="ir.actions.act_window">
+        <field name="name">Vendor Ratings</field>
+        <field name="res_model">purchase.vendor.rating.report</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="search_view_id" ref="purchase_vendor_rating_report_search"/>
+        <field name="context">{'search_default_group_partner': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No vendor rating data yet.</p>
+            <p>Confirm purchase orders and validate receipts to calculate ratings.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_purchase_vendor_rating_report"
+              name="Vendor Ratings"
+              parent="purchase.purchase_report_main"
+              action="action_purchase_vendor_rating_report"
+              sequence="20"
+              groups="purchase.group_purchase_manager"/>
+</odoo>
